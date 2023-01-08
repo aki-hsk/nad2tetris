@@ -1,0 +1,15 @@
+*.cmp
+*.out
+*.tst
+*.txt
+*.jack
+*.gif
+*.html
+*.xml
+*.iml
+*.pdf
+*.vm
+*.hack
+*.asm
+*target/
+Cargo.lock
