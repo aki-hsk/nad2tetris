@@ -1,4 +1,5 @@
 mod parser;
+mod writer;
 use parser::*;
 use std::fs::File;
 use std::io::BufReader;

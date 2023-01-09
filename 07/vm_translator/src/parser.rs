@@ -1,6 +1,8 @@
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 
+use crate::writer::{binary_op, push_segment, set_ram, INITIAL_SP_ADDRESS};
+
 pub struct Parser {
     file: BufReader<File>,
     texts: Vec<String>,
@@ -31,26 +33,25 @@ impl Parser {
     }
     pub fn parse(&mut self) {
         self.set_texts();
+        set_ram("SP", INITIAL_SP_ADDRESS);
         for command in &self.texts {
             let c_type = Self::command_type(command);
             match c_type {
                 CommandType::CArithmetic => {
-                    println!("{}", command);
+                    binary_op(command);
                 }
                 CommandType::CPush => {
-                    println!(
-                        "{}\narg1:{} arg2:{}",
-                        command,
-                        Self::arg_first(command),
-                        Self::arg_second(command)
+                    push_segment(
+                        Self::first_arg(command),
+                        Self::second_arg(command).parse().unwrap(),
                     );
                 }
                 CommandType::CPop => {
                     println!(
                         "{}\narg1:{} arg2:{}",
                         command,
-                        Self::arg_first(command),
-                        Self::arg_second(command)
+                        Self::first_arg(command),
+                        Self::second_arg(command)
                     );
                 }
                 _ => println!("else: {}", command),
@@ -84,11 +85,11 @@ impl Parser {
             _ => CommandType::Invalid,
         }
     }
-    fn arg_first(command: &str) -> &str {
+    fn first_arg(command: &str) -> &str {
         let args: Vec<&str> = command.split(" ").collect();
         args[1]
     }
-    fn arg_second(command: &str) -> &str {
+    fn second_arg(command: &str) -> &str {
         let args: Vec<&str> = command.split(" ").collect();
         args[2]
     }
