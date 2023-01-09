@@ -34,11 +34,25 @@ impl Parser {
         for command in &self.texts {
             let c_type = self.command_type(command);
             match c_type {
-                CommandType::CArithmetic => {}
-                CommandType::CPush => {
-                    println!("push: {}", command)
+                CommandType::CArithmetic => {
+                    println!("{}", command);
                 }
-                CommandType::CPop => println!("pop: {}", command),
+                CommandType::CPush => {
+                    println!(
+                        "{}\narg1:{} arg2:{}",
+                        command,
+                        self.arg_first(command),
+                        self.arg_second(command)
+                    );
+                }
+                CommandType::CPop => {
+                    println!(
+                        "{}\narg1:{} arg2:{}",
+                        command,
+                        self.arg_first(command),
+                        self.arg_second(command)
+                    );
+                }
                 _ => println!("else: {}", command),
             }
         }
@@ -64,20 +78,17 @@ impl Parser {
     }
     fn command_type(&self, command: &str) -> CommandType {
         match command {
-            v if ARITHMETIC_COMMANDS.iter().any(|ac| v.starts_with(ac)) => CommandType::CArithmetic,
-            v if v.starts_with("push") => CommandType::CPush,
-            v if v.starts_with("pop") => CommandType::CPop,
+            c if ARITHMETIC_COMMANDS.iter().any(|ac| c.starts_with(ac)) => CommandType::CArithmetic,
+            c if c.starts_with("push") => CommandType::CPush,
+            c if c.starts_with("pop") => CommandType::CPop,
             _ => CommandType::Invalid,
         }
     }
-    // fn arg_first(&self, command: &str, command_type: CommandType) -> &str {
-    //     let args: Vec<&str> = command.split(" ").collect();
-    //     match command_type {
-    //         CommandType::CArithmetic => args[0],
-    //         _ => args[1],
-    //     }
-    // }
-    fn arg_second(&self, command: &str) -> &str {
+    fn arg_first<'a>(&'a self, command: &'a str) -> &str {
+        let args: Vec<&str> = command.split(" ").collect();
+        args[1]
+    }
+    fn arg_second<'a>(&'a self, command: &'a str) -> &str {
         let args: Vec<&str> = command.split(" ").collect();
         args[2]
     }
