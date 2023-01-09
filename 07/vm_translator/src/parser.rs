@@ -32,7 +32,7 @@ impl Parser {
     pub fn parse(&mut self) {
         self.set_texts();
         for command in &self.texts {
-            let c_type = self.command_type(command);
+            let c_type = Self::command_type(command);
             match c_type {
                 CommandType::CArithmetic => {
                     println!("{}", command);
@@ -41,16 +41,16 @@ impl Parser {
                     println!(
                         "{}\narg1:{} arg2:{}",
                         command,
-                        self.arg_first(command),
-                        self.arg_second(command)
+                        Self::arg_first(command),
+                        Self::arg_second(command)
                     );
                 }
                 CommandType::CPop => {
                     println!(
                         "{}\narg1:{} arg2:{}",
                         command,
-                        self.arg_first(command),
-                        self.arg_second(command)
+                        Self::arg_first(command),
+                        Self::arg_second(command)
                     );
                 }
                 _ => println!("else: {}", command),
@@ -76,7 +76,7 @@ impl Parser {
             self.texts.push(line_str);
         }
     }
-    fn command_type(&self, command: &str) -> CommandType {
+    fn command_type(command: &str) -> CommandType {
         match command {
             c if ARITHMETIC_COMMANDS.iter().any(|ac| c.starts_with(ac)) => CommandType::CArithmetic,
             c if c.starts_with("push") => CommandType::CPush,
@@ -84,11 +84,11 @@ impl Parser {
             _ => CommandType::Invalid,
         }
     }
-    fn arg_first<'a>(&'a self, command: &'a str) -> &str {
+    fn arg_first(command: &str) -> &str {
         let args: Vec<&str> = command.split(" ").collect();
         args[1]
     }
-    fn arg_second<'a>(&'a self, command: &'a str) -> &str {
+    fn arg_second(command: &str) -> &str {
         let args: Vec<&str> = command.split(" ").collect();
         args[2]
     }
